@@ -7,5 +7,5 @@ export default defineConfig({
   build: {
     outDir: 'docs',
   },
-  base: '/react-google-sheets/docs/',
+  base: '/vite-mapleisland-score/docs/',
 })
