@@ -30,6 +30,10 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+          VITE_CLIENT_ID: ${{ secrets.VITE_CLIENT_ID }}
+          VITE_SPREADSHEET_ID: ${{ secrets.VITE_SPREADSHEET_ID }}
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v3
