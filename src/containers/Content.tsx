@@ -214,8 +214,8 @@ const MemoizedContent = memo(function Content(props: { logout: () => void }) {
   }, [fetchGetBoth]);
 
   return (
-    <main className="p-8 bg-gray-100 min-h-screen flex justify-center">
-      <div className="w-full max-w-4xl bg-white p-8 rounded-lg shadow-md">
+    <main className="p-4 md:p-8 bg-gray-100 min-h-screen flex justify-center">
+      <div className="w-full max-w-4xl bg-white p-3 md:p-4 rounded-lg shadow-md">
         <header className="mb-4">
           <div className="flex flex-col md:flex-row justify-between items-start mb-6">
             <MemoizedHeader />
