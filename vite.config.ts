@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
+    build: {
+      outDir: 'docs',
+    },
     base: mode === 'production' ? '/vite-mapleisland-score/' : '/',
   }
 })
