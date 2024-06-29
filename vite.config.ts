@@ -8,6 +8,6 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'docs',
     },
-    base: mode === 'production' ? '/vite-mapleisland-score/docs/' : '/',
+    base: mode === 'production' ? '/vite-mapleisland-score/' : '/',
   }
 })
