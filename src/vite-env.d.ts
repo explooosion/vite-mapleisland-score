@@ -1,4 +1,7 @@
 /// <reference types="vite/client" />
+/// <reference types="gapi.auth2" />
+/// <reference types="gapi.client" />
+/// <reference types="gapi.client.sheets" />
 
 interface ImportMetaEnv {
     readonly VITE_API_KEY: string;
