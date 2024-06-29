@@ -1,0 +1,42 @@
+/* index.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles for html and body */
+html,
+body {
+  @apply h-full min-h-screen;
+  @apply text-gray-900 bg-gray-100;
+  @apply antialiased;
+  @apply overflow-x-hidden;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+
+/* Ensures that the root div takes full height */
+#root {
+  @apply h-full;
+}
+
+/* Additional custom global styles */
+a {
+  @apply text-blue-500 hover:text-blue-700;
+  text-decoration: none;
+}
+
+button {
+  @apply cursor-pointer;
+}
+
+* {
+  @apply box-border;
+}
+
+/* Ensures that images scale properly within their containers */
+img {
+  max-width: 100%;
+  height: auto;
+}
