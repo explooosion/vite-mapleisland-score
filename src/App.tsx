@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   GoogleOAuthProvider,
   GoogleLogin,
@@ -39,18 +39,34 @@ function App() {
     setIsSignedIn(false);
   };
 
+  const checkScopes = useCallback(() => {
+    const authInstance = gapi.auth2.getAuthInstance();
+    const currentUser = authInstance.currentUser.get();
+    const scopes = currentUser.getGrantedScopes();
+    const requiredScopes = [
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/drive.file",
+    ];
+
+    const hasAllScopes = requiredScopes.every((scope) =>
+      scopes.includes(scope)
+    );
+    if (!hasAllScopes) {
+      authInstance.signIn({ scope: requiredScopes.join(" ") });
+    }
+  }, []);
+
   useEffect(() => {
     const initClient = async () => {
       await gapi.client.init(clientConfig);
-
       const authInstance = gapi.auth2.getAuthInstance();
-      if (authInstance && authInstance.isSignedIn.get()) {
-        const user = authInstance.currentUser.get();
-        handleLoginSuccess(user);
+      if (authInstance.isSignedIn.get()) {
+        handleLoginSuccess(authInstance.currentUser.get());
       }
+      checkScopes();
     };
     gapi.load("client:auth2", initClient);
-  }, []);
+  }, [checkScopes]);
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
