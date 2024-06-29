@@ -273,9 +273,9 @@ const MemoizedContent = memo(function Content(props: { logout: () => void }) {
               請輸入玩家名稱，用逗號（,）或換行來分隔。
             </div>
             <textarea
-              className="w-full h-full max-h-[200px] sm:max-h-[300px] md:max-h-[500px] border border-gray-300 rounded p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-y-auto"
+              className="w-full h-full md:max-h-[500px] border border-gray-300 rounded p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 md:overflow-y-auto"
               autoFocus
-              rows={30}
+              rows={window.innerWidth > 768 ? 20 : 5}
               value={targetPlayers}
               onChange={handleTargetUsersChange}
             />
