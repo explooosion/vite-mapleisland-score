@@ -21,6 +21,7 @@ const clientConfig = {
 function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
+  // @ts-expect-error handleLoginSuccess is not used
   const handleLoginSuccess = (response: any) => {
     setIsSignedIn(true);
   };
