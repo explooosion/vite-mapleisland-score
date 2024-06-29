@@ -1,32 +1,37 @@
-import React from 'react';
-import { GoogleOAuthProvider, GoogleLogin, googleLogout } from '@react-oauth/google';
-import { gapi } from 'gapi-script';
+import { useEffect, useState } from "react";
+import {
+  GoogleOAuthProvider,
+  GoogleLogin,
+  googleLogout,
+} from "@react-oauth/google";
+import { gapi } from "gapi-script";
 
-const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+function App() {
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [spreadsheetData, setSpreadsheetData] = useState<string[][]>([]);
 
-const App: React.FC = () => {
-  const [isSignedIn, setIsSignedIn] = React.useState(false);
-  const [spreadsheetData, setSpreadsheetData] = React.useState<string[][]>([]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const initClient = () => {
       gapi.client.init({
         apiKey: import.meta.env.VITE_API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
-        scope: "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive",
+        clientId: import.meta.env.VITE_CLIENT_ID,
+        discoveryDocs: [
+          "https://sheets.googleapis.com/$discovery/rest?version=v4",
+        ],
+        scope:
+          "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file",
       });
     };
-    gapi.load('client:auth2', initClient);
+    gapi.load("client:auth2", initClient);
   }, []);
 
   const handleLoginSuccess = (response: any) => {
-    console.log('Login Success: currentUser:', response);
+    console.log("handleLoginSuccess", response);
     setIsSignedIn(true);
   };
 
   const handleLoginFailure = () => {
-    console.log('Login Failed');
+    console.log("handleLoginFailure", "Login Failed");
   };
 
   const handleLogout = () => {
@@ -36,46 +41,47 @@ const App: React.FC = () => {
 
   const listData = async () => {
     const spreadsheetId = import.meta.env.VITE_SPREADSHEET_ID;
-    const range = '工作表1';
+    const range = "自動化測試";
 
     // @ts-expect-error gapi is not defined
     const response = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: spreadsheetId,
-      range: range
+      range: range,
     });
 
     const data = response.result.values;
     if (data.length > 0) {
-      console.log('Header:', data[0]);
-      console.log('Data:', data.slice(1));
+      console.log("Header:", data[0]);
+      console.log("Data:", data.slice(1));
       setSpreadsheetData(data);
     } else {
-      console.log('No data found.');
+      console.log("listData", "No data found.");
     }
   };
 
   const appendData = async () => {
     const spreadsheetId = import.meta.env.VITE_SPREADSHEET_ID;
-    const range = '工作表1';
-    const values = [
-      ['Sample Data 1', 'Sample Data 2']
-    ];
+    const range = "自動化測試";
+    const values = [["Sample Data 1", "Sample Data 2"]];
 
     // @ts-expect-error gapi is not defined
     const response = await gapi.client.sheets.spreadsheets.values.append({
       spreadsheetId: spreadsheetId,
       range: range,
-      valueInputOption: 'RAW',
+      valueInputOption: "RAW",
       resource: {
         values: values,
       },
     });
 
-    console.log(`${response.result.updates.updatedCells} cells appended.`);
+    if (response.result.updates.updatedCells) {
+      console.log(`${response.result.updates.updatedCells} cells appended.`);
+      listData();
+    }
   };
 
   return (
-    <GoogleOAuthProvider clientId={CLIENT_ID}>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
       <div>
         {!isSignedIn ? (
           <GoogleLogin
@@ -114,6 +120,6 @@ const App: React.FC = () => {
       </div>
     </GoogleOAuthProvider>
   );
-};
+}
 
 export default App;
