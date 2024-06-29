@@ -181,7 +181,7 @@ const MemoizedContent = memo(function Content(props: { logout: () => void }) {
   }, [parsedUsers, players]);
 
   const findNotMatchMessage = useMemo(() => {
-    return "(" + findNotMatchTargetPlayersInPlayers.join(", ") + ")";
+    return findNotMatchTargetPlayersInPlayers.join(", ");
   }, [findNotMatchTargetPlayersInPlayers]);
 
   const findDiffPlayer = useMemo(() => {
@@ -215,7 +215,7 @@ const MemoizedContent = memo(function Content(props: { logout: () => void }) {
 
   return (
     <main className="p-4 md:p-8 bg-gray-100 min-h-screen flex justify-center">
-      <div className="w-full max-w-4xl bg-white p-3 md:p-4 rounded-lg shadow-md">
+      <div className="w-full max-w-4xl bg-white p-4 md:p-4 rounded-lg shadow-md">
         <header className="mb-4">
           <div className="flex flex-col md:flex-row justify-between items-start mb-6">
             <MemoizedHeader />
@@ -267,28 +267,37 @@ const MemoizedContent = memo(function Content(props: { logout: () => void }) {
           </div>
         </header>
 
-        <section>
-          <div className="mb-2 text-gray-700">
-            請輸入玩家名稱，用逗號（,）或換行來分隔。
+        <section className="w-full flex flex-col-reverse md:flex-row justify-between md:space-x-5">
+          <div className="w-full pt-5 md:pt-0">
+            <div className="mb-2 text-gray-700">
+              請輸入玩家名稱，用逗號（,）或換行來分隔。
+            </div>
+            <textarea
+              className="w-full h-full max-h-[200px] sm:max-h-[300px] md:max-h-[500px] border border-gray-300 rounded p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-y-auto"
+              autoFocus
+              rows={30}
+              value={targetPlayers}
+              onChange={handleTargetUsersChange}
+            />
           </div>
-          <textarea
-            className="w-full md:w-[60%] max-h-[400px] border border-gray-300 rounded p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-y-auto"
-            autoFocus
-            rows={30}
-            value={targetPlayers}
-            onChange={handleTargetUsersChange}
-          />
-          <div className="mt-2 text-gray-700">
-            共偵測到 {parsedUsers.length} 筆玩家資料
-          </div>
-          <div className="mt-2 text-blue-700">
-            共偵測到 {findDiffPlayer} 位玩家匹配到
-          </div>
-          <div className="mt-2 text-red-700">
-            共偵測到 {findNotMatchTargetPlayersInPlayers.length} 位玩家沒匹配到{" "}
-            {findNotMatchTargetPlayersInPlayers.length
-              ? findNotMatchMessage
-              : ""}
+          <div className="w-full md:pt-7 space-y-2">
+            <div className="text-gray-700">
+              共偵測到 {parsedUsers.length} 筆玩家資料
+            </div>
+            <hr />
+            <div className="text-blue-700">
+              共有 {findDiffPlayer} 位玩家匹配到
+            </div>
+            <div className="text-red-700">
+              共有 {findNotMatchTargetPlayersInPlayers.length} 位玩家沒匹配到
+            </div>
+            {findNotMatchTargetPlayersInPlayers.length > 0 && (
+              <>
+                <div className="text-red-700">
+                  異常名單：{findNotMatchMessage}
+                </div>
+              </>
+            )}
           </div>
         </section>
       </div>

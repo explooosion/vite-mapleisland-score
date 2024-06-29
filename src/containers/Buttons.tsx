@@ -40,15 +40,13 @@ const MemoizedButtons = memo<IButtonsProps>(function MemoizedButtons(props) {
         <FontAwesomeIcon icon={faSync} className="mr-2" />
         重取資料
       </button>
-      {false && (
-        <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold w-full sm:w-1/3 md:w-auto py-2 px-4 rounded flex items-center"
-          onClick={logout}
-        >
-          <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
-          登出
-        </button>
-      )}
+      <button
+        className="bg-red-500 hover:bg-red-600 text-white font-bold w-full sm:w-1/3 md:w-auto py-2 px-4 rounded flex items-center"
+        onClick={logout}
+      >
+        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
+        登出
+      </button>
     </div>
   );
 });
