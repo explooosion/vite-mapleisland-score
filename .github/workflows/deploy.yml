@@ -28,6 +28,9 @@ jobs:
           echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" >> .env
           echo "VITE_CLIENT_ID=${{ secrets.VITE_CLIENT_ID }}" >> .env
           echo "VITE_SPREADSHEET_ID=${{ secrets.VITE_SPREADSHEET_ID }}" >> .env
+          echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}"
+          echo "VITE_CLIENT_ID=${{ secrets.VITE_CLIENT_ID }}"
+          echo "VITE_SPREADSHEET_ID=${{ secrets.VITE_SPREADSHEET_ID }}"
           cat .env
 
       - name: Build project
