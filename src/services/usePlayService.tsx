@@ -70,7 +70,7 @@ export const usePlayService = () => {
   const fetchPutScoreByName = useCallback(
     async (updates: IUpdate[]) => {
       const nameColumn = "C";
-      console.log("fetchPutScoreByName", players);
+
       if (players && players.length > 0) {
         const requests: { range: string; values: number[][] }[] = [];
 
