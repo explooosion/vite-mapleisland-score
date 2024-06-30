@@ -1,13 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
-import {
-  GoogleOAuthProvider,
-  GoogleLogin,
-  googleLogout,
-} from "@react-oauth/google";
+import { useCallback, useEffect } from "react";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { gapi } from "gapi-script";
 import { toast } from "react-toastify";
+import { useRecoilState } from "recoil";
 
-import MemoizedToastContainer from "./components/ToastContainer";
+import { isSignedInState } from "./state";
+import Toastify from "./components/ToastContainer";
 import Content from "./containers/Content";
 
 const clientConfig = {
@@ -19,24 +17,25 @@ const clientConfig = {
 };
 
 function App() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useRecoilState(isSignedInState);
 
-  // @ts-expect-error handleLoginSuccess is not used
-  const handleLoginSuccess = (response: any) => {
-    setIsSignedIn(true);
-  };
+  const handleLoginSuccess = useCallback(
+    (response?: any) => {
+      const authInstance = gapi.auth2.getAuthInstance();
+      if (
+        (authInstance.isSignedIn.get() || response) &&
+        !isSignedIn &&
+        gapi.client &&
+        gapi.client.sheets
+      ) {
+        setIsSignedIn(true);
+      }
+    },
+    [isSignedIn, setIsSignedIn]
+  );
 
   const handleLoginFailure = () => {
     toast.error("登入失敗");
-    console.log("handleLoginFailure");
-  };
-
-  const handleLogout = () => {
-    // Perform Google logout
-    googleLogout();
-    // gapi.auth.signOut();
-    // Set isSignedIn to false to update the UI
-    setIsSignedIn(false);
   };
 
   const checkScopes = useCallback(() => {
@@ -49,8 +48,9 @@ function App() {
     ];
 
     const hasAllScopes = requiredScopes.every((scope) =>
-      scopes.includes(scope)
+      scopes?.includes(scope)
     );
+
     if (!hasAllScopes) {
       authInstance.signIn({ scope: requiredScopes.join(" ") });
     }
@@ -59,14 +59,11 @@ function App() {
   useEffect(() => {
     const initClient = async () => {
       await gapi.client.init(clientConfig);
-      const authInstance = gapi.auth2.getAuthInstance();
-      if (authInstance.isSignedIn.get()) {
-        handleLoginSuccess(authInstance.currentUser.get());
-      }
+      handleLoginSuccess();
       checkScopes();
     };
     gapi.load("client:auth2", initClient);
-  }, [checkScopes]);
+  }, []);
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
@@ -79,11 +76,9 @@ function App() {
           />
         </div>
       ) : (
-        <>
-          <Content logout={handleLogout} />
-          <MemoizedToastContainer />
-        </>
+        <Content />
       )}
+      <Toastify />
     </GoogleOAuthProvider>
   );
 }

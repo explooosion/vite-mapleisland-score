@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-const MemoizedHeader = memo(function MemoizedHeader() {
+const Header = memo(function Header() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-800">
@@ -18,4 +18,4 @@ const MemoizedHeader = memo(function MemoizedHeader() {
   );
 });
 
-export default MemoizedHeader;
+export default Header;
