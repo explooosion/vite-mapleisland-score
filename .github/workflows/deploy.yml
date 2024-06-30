@@ -28,9 +28,6 @@ jobs:
           echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" >> .env
           echo "VITE_CLIENT_ID=${{ secrets.VITE_CLIENT_ID }}" >> .env
           echo "VITE_SPREADSHEET_ID=${{ secrets.VITE_SPREADSHEET_ID }}" >> .env
-          echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}"
-          echo "VITE_CLIENT_ID=${{ secrets.VITE_CLIENT_ID }}"
-          echo "VITE_SPREADSHEET_ID=${{ secrets.VITE_SPREADSHEET_ID }}"
           cat .env
 
       - name: Build project
@@ -40,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: production-files
-          path: ./docs
+          path: ./dist
 
   deploy:
     name: Deploy
@@ -53,10 +50,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: production-files
-          path: ./docs
+          path: ./dist
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./dist
