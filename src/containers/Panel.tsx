@@ -24,7 +24,7 @@ const Panel = memo(function Panel() {
     <section className="w-full flex flex-col-reverse md:flex-row justify-between md:space-x-5">
       <div className="w-full pt-5 md:pt-0">
         <div className="mb-2 text-gray-700">
-          請輸入玩家名稱 (C欄)，接著用逗號（,）或換行分隔。
+          請輸入玩家名稱，接著用逗號（,）或換行分隔。
         </div>
         <textarea
           className="w-full h-full md:max-h-[500px] border border-gray-300 rounded p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 md:overflow-y-auto"

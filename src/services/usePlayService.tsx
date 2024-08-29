@@ -28,68 +28,54 @@ export const usePlayService = () => {
 
   const [players, setPlayers] = useRecoilState(playersState);
 
-  const fetchGetPlayDatesAndPlayersAndSheetNames = useCallback(async () => {
-    async function fetchSheetNames() {
-      const response = await gapi.client.sheets.spreadsheets.get({
-        spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
-      });
-      const sheets = response.result.sheets || [];
-      setSheetNames(sheets.map((s: any) => s.properties.title));
-    }
+  const fetchGetSheetNames = useCallback(async () => {
+    const response = await gapi.client.sheets.spreadsheets.get({
+      spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
+    });
+    const sheets = response.result.sheets || [];
+    setSheetNames(sheets.map((s: any) => s.properties.title));
+  }, [setSheetNames]);
 
-    async function fetchPlayDatesAndPlayer() {
-      const playDatesRange = `${sheetName}!A1:1`;
-      const playersRange = `${sheetName}!${playerNameColumn}:${playerNameColumn}`;
+  const fetchGetPlayDatesAndPlayers = useCallback(async () => {
+    const playDatesRange = `${sheetName}!A1:1`;
+    const playersRange = `${sheetName}!${playerNameColumn}:${playerNameColumn}`;
 
-      const response = await gapi.client.sheets.spreadsheets.values.batchGet({
-        spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
-        ranges: [playDatesRange, playersRange],
-      });
+    const response = await gapi.client.sheets.spreadsheets.values.batchGet({
+      spreadsheetId: import.meta.env.VITE_SPREADSHEET_ID,
+      ranges: [playDatesRange, playersRange],
+    });
 
-      const batchData = response.result.valueRanges!;
+    const batchData = response.result.valueRanges!;
 
-      if (batchData.length === 2) {
-        const playDatesData = batchData[0].values;
-        const playersData = batchData[1].values;
+    if (batchData.length === 2) {
+      const playDatesData = batchData[0].values;
+      const playersData = batchData[1].values;
 
-        if (
-          Array.isArray(playDatesData) &&
-          playDatesData.length > 0 &&
-          Array.isArray(playDatesData[0])
-        ) {
-          const newPlayDates: IPlayDate[] = playDatesData[0]
-            .map((d, i) => ({ id: i, label: d }))
-            .filter((_, i) => i > 7)
-            .reverse();
+      if (
+        Array.isArray(playDatesData) &&
+        playDatesData.length > 0 &&
+        Array.isArray(playDatesData[0])
+      ) {
+        const newPlayDates: IPlayDate[] = playDatesData[0]
+          .map((d, i) => ({ id: i, label: d }))
+          .filter((_, i) => i > 7)
+          .reverse();
 
-          setPlayDates(newPlayDates);
-          setPlayDate(newPlayDates[0].id);
-        } else {
-          throw new Error("找不到任何副本日期");
-        }
-
-        if (playersData && playersData.length > 0) {
-          setPlayers(playersData.flatMap((row) => row));
-        } else {
-          throw new Error("找不到任何玩家名稱");
-        }
-
-        return batchData;
+        setPlayDates(newPlayDates);
+        setPlayDate(newPlayDates[0].id);
       } else {
-        throw new Error("找不到任何資料");
+        throw new Error("找不到任何副本日期");
       }
-    }
 
-    await fetchSheetNames();
-    await fetchPlayDatesAndPlayer();
-  }, [
-    setPlayDates,
-    setPlayDate,
-    setPlayers,
-    sheetName,
-    playerNameColumn,
-    setSheetNames,
-  ]);
+      if (playersData && playersData.length > 0) {
+        setPlayers(playersData.flatMap((row) => row));
+      } else {
+        throw new Error("找不到任何玩家名稱");
+      }
+    } else {
+      throw new Error("找不到任何資料");
+    }
+  }, [setPlayDates, setPlayDate, setPlayers, sheetName, playerNameColumn]);
 
   const fetchPutScoreByName = useCallback(
     async (updates: IUpdate[]) => {
@@ -138,5 +124,9 @@ export const usePlayService = () => {
     [players, sheetName, playerNameColumn]
   );
 
-  return { fetchGetPlayDatesAndPlayersAndSheetNames, fetchPutScoreByName };
+  return {
+    fetchGetSheetNames,
+    fetchGetPlayDatesAndPlayers,
+    fetchPutScoreByName,
+  };
 };

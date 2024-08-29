@@ -1,4 +1,4 @@
-import { ChangeEvent, memo } from "react";
+import { ChangeEvent, memo, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { toast } from "react-toastify";
 
@@ -9,15 +9,22 @@ import {
   playDateState,
   scoreState,
   scores,
+  playerNameColumns,
+  playerNameColumnState,
 } from "../state";
+import { usePlayService } from "../services/usePlayService";
 
 const Selection = memo(function Selection() {
+  const { fetchGetPlayDatesAndPlayers } = usePlayService();
+
   const playDates = useRecoilValue(playDatesState);
 
   const [sheetName, setSheetNameState] = useRecoilState(sheetNameState);
   const [playDate, setPlayDate] = useRecoilState(playDateState);
   const [score, setScore] = useRecoilState(scoreState);
-
+  const [playerNameColumn, setPlayerNameColumn] = useRecoilState(
+    playerNameColumnState
+  );
   const sheetNames = useRecoilValue(sheetNamesState);
 
   const handlePlayDateChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -40,6 +47,25 @@ const Selection = memo(function Selection() {
     setSheetNameState(event.target.value);
     toast.info(`你選擇了「${event.target.value}」！`);
   };
+
+  const handlePlayerNameColumnChange = (
+    event: ChangeEvent<HTMLSelectElement>
+  ) => {
+    setPlayerNameColumn(event.target.value);
+    toast.info(`你選擇了「${event.target.value}」！`);
+  };
+
+  useEffect(() => {
+    async function fetchGetBoth() {
+      try {
+        await fetchGetPlayDatesAndPlayers();
+        toast.success("資料已重取");
+      } catch (error: any) {
+        toast.error(error?.result?.error?.message ?? error.message);
+      }
+    }
+    fetchGetBoth();
+  }, [sheetName, fetchGetPlayDatesAndPlayers]);
 
   return (
     <div className="flex flex-col sm:flex-row items-end sm:space-x-4 space-y-2 sm:space-y-0">
@@ -87,6 +113,24 @@ const Selection = memo(function Selection() {
         >
           {scores.map((s) => (
             <option key={s} value={s} label={s.toString()} />
+          ))}
+        </select>
+      </div>
+      <div className="w-full md:w-auto flex flex-col">
+        <label
+          htmlFor="playerNameColumn"
+          className="text-gray-700 font-bold mb-2"
+        >
+          玩家名稱欄位
+        </label>
+        <select
+          className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          id="playerNameColumn"
+          value={playerNameColumn}
+          onChange={handlePlayerNameColumnChange}
+        >
+          {playerNameColumns.map((s) => (
+            <option key={s} value={s} label={`${s} 欄`} />
           ))}
         </select>
       </div>

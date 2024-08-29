@@ -15,8 +15,11 @@ import { isSignedInState } from "../state";
 import { usePlayService } from "../services/usePlayService";
 
 const Buttons = memo(function Buttons() {
-  const { fetchGetPlayDatesAndPlayersAndSheetNames, fetchPutScoreByName } =
-    usePlayService();
+  const {
+    fetchGetSheetNames,
+    fetchGetPlayDatesAndPlayers,
+    fetchPutScoreByName,
+  } = usePlayService();
 
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
 
@@ -45,12 +48,13 @@ const Buttons = memo(function Buttons() {
 
   const fetchGetBoth = useCallback(async () => {
     try {
-      await fetchGetPlayDatesAndPlayersAndSheetNames();
+      await fetchGetSheetNames();
+      await fetchGetPlayDatesAndPlayers();
       toast.success("資料已重取");
     } catch (error: any) {
       toast.error(error?.result?.error?.message ?? error.message);
     }
-  }, [fetchGetPlayDatesAndPlayersAndSheetNames]);
+  }, [fetchGetSheetNames, fetchGetPlayDatesAndPlayers]);
 
   return (
     <div className="top-2 w-full md:w-auto flex flex-col sm:flex-row justify-center md:justify-end items-center my-2 md:my-0 space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-4">

@@ -7,10 +7,14 @@ import Selection from "./Selection";
 import Panel from "./Panel";
 
 const Content = memo(function Content() {
-  const { fetchGetPlayDatesAndPlayersAndSheetNames } = usePlayService();
+  const { fetchGetSheetNames, fetchGetPlayDatesAndPlayers } = usePlayService();
 
   useEffect(() => {
-    fetchGetPlayDatesAndPlayersAndSheetNames();
+    async function initial() {
+      await fetchGetSheetNames();
+      await fetchGetPlayDatesAndPlayers();
+    }
+    initial();
   }, []);
 
   return (
