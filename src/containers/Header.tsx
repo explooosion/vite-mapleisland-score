@@ -10,9 +10,17 @@ const Header = memo(function Header() {
         href="https://docs.google.com/spreadsheets/d/1aKLQuvdW7YnA3detaVAZig0OO3RRU3gnsXAT__sd0JE/edit?gid=0#gid=0"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-blue-500 hover:underline"
+        className="mr-2 text-blue-500 hover:underline"
       >
         查看試算表
+      </a>
+      <a
+        href="https://github.com/explooosion/vite-mapleisland-score"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-500 hover:underline"
+      >
+        平台程式碼
       </a>
     </div>
   );
