@@ -5,14 +5,12 @@ export interface IPlayDate {
   label: string;
 }
 
-export type ISheetName = "自動化測試" | "炎團積分表";
-
 export const isSignedInState = atom<boolean>({
   key: "isSignedInState",
   default: false,
 });
 
-export const sheetNameState = atom<ISheetName>({
+export const sheetNameState = atom<string>({
   key: "sheetNameState",
   default: "自動化測試",
 });
@@ -50,6 +48,28 @@ export const scoreState = atom<number>({
 });
 //#endregion
 
+export const playerNameColumnState = atom<string>({
+  key: "playerNameColumnState",
+  default: "C",
+});
+
 export const scores = [1, 0.8, 0.5, 0.3, 0];
 
-export const sheetNames: ISheetName[] = ["自動化測試", "炎團積分表"];
+export const sheetNamesState = atom<string[]>({
+  key: "sheetNames",
+  default: ["自動化測試"],
+});
+
+export const playerNameColumns = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+];

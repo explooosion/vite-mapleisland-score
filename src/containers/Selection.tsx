@@ -1,14 +1,14 @@
 import { ChangeEvent, memo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { toast } from "react-toastify";
 
 import {
   sheetNameState,
-  sheetNames,
+  sheetNamesState,
   playDatesState,
   playDateState,
   scoreState,
   scores,
-  ISheetName,
 } from "../state";
 
 const Selection = memo(function Selection() {
@@ -18,27 +18,38 @@ const Selection = memo(function Selection() {
   const [playDate, setPlayDate] = useRecoilState(playDateState);
   const [score, setScore] = useRecoilState(scoreState);
 
+  const sheetNames = useRecoilValue(sheetNamesState);
+
   const handlePlayDateChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setPlayDate(Number(event.target.value));
+
+    const selectedPlayDate = playDates.find(
+      (d) => d.id === Number(event.target.value)
+    );
+    if (selectedPlayDate) {
+      toast.info(`你選擇了「${selectedPlayDate.label}」！`);
+    }
   };
 
   const handleScoreChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setScore(Number(event.target.value));
+    toast.info(`你選擇了「${Number(event.target.value)}」！`);
   };
 
   const handleSheetNameChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSheetNameState(event.target.value as ISheetName);
+    setSheetNameState(event.target.value);
+    toast.info(`你選擇了「${event.target.value}」！`);
   };
 
   return (
     <div className="flex flex-col sm:flex-row items-end sm:space-x-4 space-y-2 sm:space-y-0">
       <div className="w-full md:w-auto flex flex-col">
-        <label htmlFor="scores" className="text-gray-700 font-bold mb-2">
+        <label htmlFor="sheetName" className="text-gray-700 font-bold mb-2">
           表單名稱
         </label>
         <select
           className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          id="scores"
+          id="sheetName"
           value={sheetName}
           onChange={handleSheetNameChange}
         >
@@ -49,7 +60,7 @@ const Selection = memo(function Selection() {
       </div>
       <div className="w-full md:w-auto flex flex-col">
         <label htmlFor="playDates" className="text-gray-700 font-bold mb-2">
-          副本日期
+          副本日期 (A列)
         </label>
         <select
           className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -65,12 +76,12 @@ const Selection = memo(function Selection() {
         </select>
       </div>
       <div className="w-full md:w-auto flex flex-col">
-        <label htmlFor="scores" className="text-gray-700 font-bold mb-2">
+        <label htmlFor="score" className="text-gray-700 font-bold mb-2">
           獲得分數
         </label>
         <select
           className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          id="scores"
+          id="score"
           value={score}
           onChange={handleScoreChange}
         >
