@@ -4,7 +4,7 @@ const Header = memo(function Header() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-800">
-        毛茸秘境 - 炎團分數登記
+        毛茸秘境 - 副本積分表
       </h1>
       <a
         href="https://docs.google.com/spreadsheets/d/1aKLQuvdW7YnA3detaVAZig0OO3RRU3gnsXAT__sd0JE/edit?gid=0#gid=0"
