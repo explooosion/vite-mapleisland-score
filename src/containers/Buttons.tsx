@@ -31,6 +31,7 @@ const Buttons = memo(function Buttons() {
     googleLogout();
     gapi.auth2.getAuthInstance().signOut();
     setIsSignedInState(false);
+    localStorage.clear();
   };
 
   const handleBatchUpdateScore = useCallback(async () => {
